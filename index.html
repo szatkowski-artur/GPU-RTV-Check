@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <script src="angular.min.js"></script>
+    <script src="app.js"></script>
+    <title>Title</title>
+</head>
+<body ng-app="App">
+<div class="container" ng-controller="Controller as ctrl">
+
+    <table class="settings" ng-show="ctrl.settings">
+        <tr>
+            <td>Automatic</td>
+            <td><input type="checkbox" name="automatic" ng-model="ctrl.automate" ng-change="ctrl.toggleAutomaticRefresh()"></td>
+        </tr>
+        <tr>
+            <td>Refresh Time</td>
+            <td>
+                <input type="text" class="input" ng-model="ctrl.refreshTime">
+                <button ng-click="ctrl.changeRefreshTime()">Save</button>
+            </td>
+        </tr>
+    </table>
+
+    <div class="icons">
+        <a href="https://cors-anywhere.herokuapp.com/corsdemo" class="iconsLeft" ng-show="ctrl.register">
+            <img src="images/warning.png" alt="Warning" >
+        </a>
+        <span class="iconsRight">
+            <img src="images/settings.png" alt="Settings" ng-click="ctrl.toggleSettings()"/>
+            <img src="images/refresh.png" alt="Refresh" ng-click="ctrl.refresh()"/>
+        </span>
+    </div>
+
+    <div class="number">
+        <div class="loader" ng-show="ctrl.loading">Loading...</div>
+        <h2>{{ctrl.number}}</h2>
+    </div>
+
+    <div class="time" ng-show="ctrl.automate">
+        Next Refresh in {{ctrl.timer}}s
+    </div>
+
+</div>
+</body>
+</html>
