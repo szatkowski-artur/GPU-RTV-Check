@@ -11,7 +11,7 @@
 
         let controller = this;
         let milliseconds = 1000 * 60;
-        controller.number = '';
+        controller.number = '19';
         controller.loading = false;
         controller.settings = false;
         controller.register = false;
@@ -57,7 +57,7 @@
         let decreaseTimer = () => {
 
             if (controller.timer == 1)
-                controller.timer = controller.refreshTime;
+                controller.timer = controller.refreshTime * 60;
             else
                 controller.timer--;
 
@@ -71,16 +71,15 @@
             controller.number = '';
             Service.getPage().then(response => {
                 controller.loading = false;
-                if (response.status === 403) {
-                    controller.register = true;
-                    registerNotification();
-                } else {
-                    controller.register = false;
-                    controller.number = Service.extractNumber(response);
-                    if (controller.number !== oldValue && oldValue !== '')
-                        notify(oldValue, controller.number);
-                }
-            });
+                controller.register = false;
+                controller.number = Service.extractNumber(response);
+                if (controller.number !== oldValue && oldValue !== '')
+                    notify(oldValue, controller.number);
+
+            }).catch(err => {
+                controller.register = true;
+                registerNotification();
+            })
         }
 
         controller.toggleSettings = () => {
@@ -115,14 +114,19 @@
 
     }
 
-    Service.$inject = ['$http', 'URL'];
+    Service.$inject = ['$http', 'URL', '$q'];
 
-    function Service($http, URL) {
+    function Service($http, URL, $q) {
 
         let service = this;
 
         service.getPage = () => {
             return $http.get('https://cors-anywhere.herokuapp.com/' + URL);
+            // return $q(resolve => {
+            //     setTimeout(()=>{
+            //         resolve(20);
+            //     },5000)
+            // });
         }
 
         service.extractNumber = response => {
